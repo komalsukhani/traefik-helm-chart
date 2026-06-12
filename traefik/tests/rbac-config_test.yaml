@@ -729,6 +729,19 @@ tests:
               - list
               - watch
               - get
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - configmaps
+            verbs:
+              - create
+              - update
+              - patch
+              - delete
 
       - template: rbac/clusterrole.yaml
         contains:
@@ -769,6 +782,35 @@ tests:
               - get
               - list
               - watch
+              - create
+              - update
+              - patch
+              - delete
+
+  - it: should allow managing configmaps in hub namespaces in namespaced mode
+    set:
+      hub:
+        token: xxx
+        namespaces:
+          - bar
+      rbac:
+        namespaced: true
+    asserts:
+      - template: rbac/role.yaml
+        documentIndex: 1
+        equal:
+          path: metadata.namespace
+          value: bar
+      - template: rbac/role.yaml
+        documentIndex: 1
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - configmaps
+            verbs:
               - create
               - update
               - patch

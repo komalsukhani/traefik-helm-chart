@@ -158,6 +158,15 @@ rules:
   {{- end }}
   {{- if .Values.hub.token }}
   - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    verbs:
+      - create
+      - update
+      - patch
+      - delete
+  - apiGroups:
       - coordination.k8s.io
     resources:
       - leases
